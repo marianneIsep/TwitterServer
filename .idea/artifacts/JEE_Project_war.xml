@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="JEE_Project:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="JEE_Project-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="JEE_Project:war exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-core:4.0.2" />
+          <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-async:4.0.2" />
+          <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-stream:4.0.2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
