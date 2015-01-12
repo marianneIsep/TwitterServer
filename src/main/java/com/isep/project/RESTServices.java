@@ -77,7 +77,7 @@ public class RESTServices {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getTweets/{param}")
-    public List<Tweet> getTweets(@PathParam("param") int userId) {
+    public List<Tweet> getTweets(@PathParam("param") long userId) {
         BasicConfigurator.configure();
         List<Tweet> listTweets = dbHelper.getTweetsByUser(userId);
         log.info("param : " + userId);
