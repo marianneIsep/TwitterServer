@@ -1,33 +1,27 @@
 package com.isep.project.Model;
 
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
 /**
- * Created by Marianne on 28/12/14.
+ * Created by Marianne on 12/01/15.
  */
-
-
-
 @Entity
 public class User {
-    private int id;
+    private long id;
     private String name;
     private Timestamp tweetDate;
     private String twitterNickname;
     private Set<Tweet> tweets;
 
-
     @Id
-    @GeneratedValue
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -70,7 +64,6 @@ public class User {
         this.tweets = tweets;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,7 +82,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (tweetDate != null ? tweetDate.hashCode() : 0);
         result = 31 * result + (twitterNickname != null ? twitterNickname.hashCode() : 0);

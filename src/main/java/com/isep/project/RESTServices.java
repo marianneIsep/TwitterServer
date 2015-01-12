@@ -1,16 +1,13 @@
 package com.isep.project;
 
-import com.isep.project.DAO.TweetDAO;
-import com.isep.project.DAO.TweetDAOImpl;
-import com.isep.project.DAO.UserDAO;
-import com.isep.project.DAO.UserDAOImpl;
+import com.isep.project.DAO.*;
 import com.isep.project.Model.Tweet;
 import com.isep.project.Model.User;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import twitter4j.TwitterException;
+import twitter4j.Status;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,9 +20,8 @@ import java.util.List;
 
 @Path("/services")
 public class RESTServices {
-    UserDAO userDAO;
-    TweetDAO tweetDAO;
 
+    DBHelper dbHelper = new DBHelper();
     Logger log = Logger.getLogger(RESTServices.class);
     /*
     * Method that update the Database :
@@ -36,40 +32,25 @@ public class RESTServices {
     @Path("/addTweet")
     public String updateData() throws JSONException {
         User user = new User();
-        user.setName("Marianne");
-        user.setTwitterNickname("MarianneKo");
-
         Tweet tweet = new Tweet();
-        tweet.setAuthor(user);
-        tweet.setMessage("twitter c'est cool !");
-        userDAO = new UserDAOImpl();
-        tweetDAO = new TweetDAOImpl();
-        // check param values are not null
-        if (!user.equals(null) && !tweet.equals(null)) {
 
-            List<User> allUsers = userDAO.getUsers();
-            boolean userExists = false;
-            for (User oneUser : allUsers) {
-                // check if the User doesn't exist
-                if (oneUser.getTwitterNickname().equals(user.getTwitterNickname())) {
-                    userExists = true;
-                    user = oneUser;
+        APITwitter apiTwitter = new APITwitter(10);
+        List<Status> listStatus = apiTwitter.getTweet();
+        for(Status status : listStatus) {
+            user = apiTwitter.getUserFromStatus(status);
+            tweet = apiTwitter.getTweetFromStatus(status);
+
+            // check param values are not null
+            if (!user.equals(null) && !tweet.equals(null)) {
+                if (!dbHelper.getUsers().contains(user))
+                    user = dbHelper.saveUser(user);
+                if (!tweet.equals(null)) {
+                    tweet.setAuthor(user);
+                    tweet = dbHelper.saveTweet(tweet);
                 }
-            }
 
-            // add the user if he doesn't exist
-            if (!userExists)
-            {
-                user = userDAO.addUser(user);
             }
-
-            if (!tweet.equals(null)) {
-                tweet.setAuthor(user);
-                tweet = tweetDAO.addTweet(tweet);
-            }
-
         }
-
 
         JSONObject jsonObject = new JSONObject();
         if (tweet.getTweetId() != 0 && user.getId() !=0)
@@ -86,8 +67,7 @@ public class RESTServices {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getUsers")
     public List<User> getUsers(){
-        userDAO = new UserDAOImpl();
-        List<User> listUsers = userDAO.getUsers();
+        List<User> listUsers = dbHelper.getUsers();
         return listUsers;
     }
 
@@ -97,19 +77,11 @@ public class RESTServices {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getTweets/{param}")
-    public List<Tweet> getTweets(@PathParam("param") String Nickname) {
+    public List<Tweet> getTweets(@PathParam("param") int userId) {
         BasicConfigurator.configure();
-        tweetDAO = new TweetDAOImpl();
-        List<Tweet> listTweets = tweetDAO.getTweetsByUser(Nickname);
-        log.info("param : " + Nickname);
+        List<Tweet> listTweets = dbHelper.getTweetsByUser(userId);
+        log.info("param : " + userId);
         return listTweets;
     }
 
-    @GET
-    @Path("/")
-    public void testTweets() throws TwitterException {
-
-        APITwitter api = new APITwitter();
-        api.getBlabla();
-    }
 }

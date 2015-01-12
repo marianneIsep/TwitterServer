@@ -12,7 +12,6 @@
         <init-param>
         <param-name>jersey.config.server.provider.classnames</param-name>
         <param-value>
-            com.isep.project.RESTResource
             com.isep.project.RESTServices
         </param-value>
     </init-param>

@@ -1,80 +1,72 @@
 package com.isep.project;
-
-import org.apache.log4j.BasicConfigurator;
+import com.isep.project.Model.Tweet;
+import com.isep.project.Model.User;
 import org.apache.log4j.Logger;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marianne on 09/01/15.
  */
 public class APITwitter {
 
-    private static Logger log = Logger.getLogger(APITwitter.class);
+    private static final Logger log = Logger.getLogger(APITwitter.class);
     private final static String CONSUMER_KEY = "L6ZGosflD657OA7tVKErCWHBI";
     private final static String CONSUMER_KEY_SECRET = "N7SLrFctf084ngiI2deXk7H9Psn07b6ixbt8dcJqPUEfBwyIKS";
     private final static String ACCESS_TOKEN = "2529838722-yQHVEcjr46nSXIYZ5udlJgXlpS1FCIQkjcqJTK8";
     private final static String ACCESS_TOKEN_SECRET = "C2gu5c7syMQswLb5UbwB0LLUMGkc8vYiucb0JRneSEWk2";
 
-    public void getBlabla(){
-        BasicConfigurator.configure();
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setOAuthConsumerKey(CONSUMER_KEY);
-        cb.setOAuthConsumerSecret(CONSUMER_KEY_SECRET);
-        cb.setOAuthAccessToken(ACCESS_TOKEN);
-        cb.setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+    private static ConfigurationBuilder configurationBuilder;
+    private static int numberOfTweets;
 
-        Twitter twitter = new TwitterFactory(cb.build()).getInstance();
-        Query query = new Query("#peace");
-        int numberOfTweets = 512;
-        long lastID = Long.MAX_VALUE;
-        log.info("presentation des tweets");
-        ArrayList<Status> tweets = new ArrayList<Status>();
-        log.info("taille de la liste : " + tweets.size());
-        while (tweets.size () < numberOfTweets) {
-            log.info("ca plante pas");
-            if (numberOfTweets - tweets.size() > 100) {
-                log.info("ca plante toujours pas");
-                query.setCount(100);
-            } else {
-                log.info("ca plante pas dans le sinon");
-                query.setCount(numberOfTweets - tweets.size());
-            }
-            try {
-                log.info("Va pour la requete");
-                QueryResult result = twitter.search(query);
-                log.info("C'est la merde maintenant");
-                tweets.addAll(result.getTweets());
-                System.out.println("Gathered " + tweets.size() + " tweets");
-                for (Status t: tweets)
-                    if(t.getId() < lastID) lastID = t.getId();
+    public APITwitter(int numberOfTweets){
+        configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.setOAuthConsumerKey(CONSUMER_KEY);
+        configurationBuilder.setOAuthConsumerSecret(CONSUMER_KEY_SECRET);
+        configurationBuilder.setOAuthAccessToken(ACCESS_TOKEN);
+        configurationBuilder.setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
 
-            }
+        this.numberOfTweets = numberOfTweets;
+    }
 
-            catch (TwitterException te) {
-                System.out.println("Couldn't connect: " + te);
-            }
-            query.setMaxId(lastID-1);
-        }
-
-        for (int i=0; i<tweets.size(); i++)
-        {
-            Status t = tweets.get(i);
-
-            GeoLocation loc = t.getGeoLocation();
-
-            if(loc != null)
+    public List<Status> getTweet(){
+        Twitter twitter = new TwitterFactory(configurationBuilder.build()).getInstance();
+        Query query = new Query("@google");
+        List<Status> listTweetsFromTwitter = new ArrayList<Status>();
+        while (listTweetsFromTwitter.size() < numberOfTweets){
+            try
             {
-                tweets.get(i++);
-                String user = t.getUser().getScreenName();
-                String msg = t.getText();
-
-                System.out.println("user : " + user + " msg : " + msg);
-
-
+                query.setCount(numberOfTweets);
+                QueryResult queryResult = twitter.search(query);
+                listTweetsFromTwitter.addAll(queryResult.getTweets());
+            }
+            catch(TwitterException te)
+            {
+                log.error(te.getMessage());
             }
         }
+
+        return listTweetsFromTwitter;
+    }
+
+    public User getUserFromStatus(Status status){
+        User user = new User();
+        user.setName(status.getUser().getName());
+        user.setTwitterNickname(status.getUser().getScreenName());
+        user.setTweetDate(new Timestamp(status.getUser().getCreatedAt().getTime()));
+        user.setId(status.getUser().getId());
+        return user;
+    }
+
+    public Tweet getTweetFromStatus(Status status){
+        Tweet tweet = new Tweet();
+        tweet.setMessage(status.getText());
+        tweet.setDate(new Timestamp(status.getCreatedAt().getTime()));
+        tweet.setTweetId(status.getId());
+        return tweet;
     }
 }

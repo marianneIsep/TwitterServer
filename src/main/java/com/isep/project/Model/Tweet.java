@@ -4,25 +4,22 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by Marianne on 28/12/14.
+ * Created by Marianne on 12/01/15.
  */
-
-
 @Entity
 public class Tweet {
-    private int tweetId;
+    private long tweetId;
     private Timestamp date;
     private String message;
     private User author;
 
     @Id
-    @GeneratedValue
     @Column(name = "tweetId", nullable = false, insertable = true, updatable = true)
-    public int getTweetId() {
+    public long getTweetId() {
         return tweetId;
     }
 
-    public void setTweetId(int tweetId) {
+    public void setTweetId(long tweetId) {
         this.tweetId = tweetId;
     }
 
@@ -72,7 +69,7 @@ public class Tweet {
 
     @Override
     public int hashCode() {
-        int result = tweetId;
+        int result = (int) (tweetId ^ (tweetId >>> 32));
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
