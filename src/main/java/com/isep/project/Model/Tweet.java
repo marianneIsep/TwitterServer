@@ -1,11 +1,17 @@
 package com.isep.project.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
  * Created by Marianne on 12/01/15.
  */
+
 @Entity
 public class Tweet {
     private long tweetId;
@@ -44,7 +50,8 @@ public class Tweet {
     }
 
     @ManyToOne
-    @JoinColumn(name = "authorId")
+    @JoinColumn(name = "authorId", nullable = false, insertable = true, updatable = true)
+    @JsonBackReference
     public User getAuthor() {
         return author;
     }

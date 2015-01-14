@@ -62,6 +62,9 @@
           <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-async:4.0.2" />
           <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-stream:4.0.2" />
           <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-core:4.0.2" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.10" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.10" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.4.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

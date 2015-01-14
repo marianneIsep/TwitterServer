@@ -1,5 +1,10 @@
 package com.isep.project.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -7,6 +12,7 @@ import java.util.Set;
 /**
  * Created by Marianne on 12/01/15.
  */
+
 @Entity
 public class User {
     private long id;
@@ -56,6 +62,7 @@ public class User {
     }
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "author")
+    @JsonManagedReference
     public Set<Tweet> getTweets() {
         return tweets;
     }

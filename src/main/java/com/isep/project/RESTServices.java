@@ -11,6 +11,8 @@ import twitter4j.Status;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -38,17 +40,12 @@ public class RESTServices {
         List<Status> listStatus = apiTwitter.getTweet();
         for(Status status : listStatus) {
             user = apiTwitter.getUserFromStatus(status);
-            tweet = apiTwitter.getTweetFromStatus(status);
+            tweet = apiTwitter.getTweetFromStatus(status, user);
 
             // check param values are not null
             if (!user.equals(null) && !tweet.equals(null)) {
-                if (!dbHelper.getUsers().contains(user))
-                    user = dbHelper.saveUser(user);
-                if (!tweet.equals(null)) {
-                    tweet.setAuthor(user);
-                    tweet = dbHelper.saveTweet(tweet);
-                }
-
+                user = dbHelper.saveUser(user);
+                tweet = dbHelper.saveTweet(tweet);
             }
         }
 
@@ -83,5 +80,7 @@ public class RESTServices {
         log.info("param : " + userId);
         return listTweets;
     }
+
+
 
 }

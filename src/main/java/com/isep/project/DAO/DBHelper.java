@@ -50,7 +50,7 @@ public class DBHelper {
         try {
             session = DBHelper.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            session.save(tweet);
+            session.saveOrUpdate(tweet);
             tx.commit();
             log.info(tweet.getTweetId());
         } catch(Exception e){
@@ -72,7 +72,7 @@ public class DBHelper {
             session = DBHelper.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
             //save the user
-            session.save(user);
+            session.saveOrUpdate(user);
             //allows to insert into the database
             tx.commit();
             log.info(user.getId());
@@ -117,15 +117,12 @@ public class DBHelper {
                 session.close();
             }
         }
-        for(Tweet tweet : listTweetsByUser){
-            tweet.setAuthor(null);
-        }
         return listTweetsByUser;
     }
 
     /*
     =============================================
-    ========= get tweets for one user ===========
+    ========= get users ===========
     =============================================
     * */
 
@@ -134,14 +131,7 @@ public class DBHelper {
         List<User> listUser = null;
         try {
             session = DBHelper.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
-            listUser = session.createQuery("from User").list();
-            for (User user : listUser)
-            {
-                user.setTweets(new HashSet<Tweet>(getTweetsByUser(user.getId())));
-                //user.setTweets(null);
-            }
-            tx.commit();
+            listUser = (List<User>)session.createQuery("from User").list();
             log.info(listUser.size());
         } catch(Exception e){
             log.warn(e.getMessage());
@@ -152,7 +142,7 @@ public class DBHelper {
                 session.close();
             }
         }
-        return listUser;
+        return listUser ;
     }
 
 

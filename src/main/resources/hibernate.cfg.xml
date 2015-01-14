@@ -6,9 +6,9 @@
   <session-factory>
     <property name="connection.url">jdbc:mysql://localhost:3306/TweetsDatabase</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-    <!--<property name="hibernate.hbm2ddl.auto">update</property>
-      <property name="hibernate.format_sql">true</property>
-      <property name="hibernate.show_sql">true</property>-->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+
+
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">cherche</property>
     <mapping class="com.isep.project.Model.Tweet"/>

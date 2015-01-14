@@ -62,11 +62,12 @@ public class APITwitter {
         return user;
     }
 
-    public Tweet getTweetFromStatus(Status status){
+    public Tweet getTweetFromStatus(Status status, User user){
         Tweet tweet = new Tweet();
         tweet.setMessage(status.getText());
         tweet.setDate(new Timestamp(status.getCreatedAt().getTime()));
         tweet.setTweetId(status.getId());
+        tweet.setAuthor(user);
         return tweet;
     }
 }
