@@ -126,7 +126,7 @@ public class DBHelper {
     =============================================
     * */
 
-     public List<User> getUsers() {
+     public List<UserMapper> getUsers() {
         BasicConfigurator.configure();
         List<User> listUser = null;
         try {
@@ -139,10 +139,10 @@ public class DBHelper {
         finally {
             if(session != null & session.isOpen())
             {
-                session.close();
+                //session.close();
             }
         }
-        return listUser ;
+        return new MapperObjects().mapUsers(listUser) ;
     }
 
 

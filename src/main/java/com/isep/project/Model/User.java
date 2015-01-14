@@ -62,7 +62,6 @@ public class User {
     }
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "author")
-    @JsonManagedReference
     public Set<Tweet> getTweets() {
         return tweets;
     }

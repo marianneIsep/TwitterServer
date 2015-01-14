@@ -63,8 +63,9 @@ public class RESTServices {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getUsers")
-    public List<User> getUsers(){
-        List<User> listUsers = dbHelper.getUsers();
+    public List<UserMapper> getUsers(){
+        List<UserMapper> listUsers = dbHelper.getUsers();
+        log.info(listUsers.size());
         return listUsers;
     }
 

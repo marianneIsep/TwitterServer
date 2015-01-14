@@ -51,7 +51,6 @@ public class Tweet {
 
     @ManyToOne
     @JoinColumn(name = "authorId", nullable = false, insertable = true, updatable = true)
-    @JsonBackReference
     public User getAuthor() {
         return author;
     }
