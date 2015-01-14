@@ -21,7 +21,6 @@ public class MapperObjects {
                 tweetMapper.setTweetId(tweet.getTweetId());
                 tweetMapper.setDate(tweet.getDate());
                 tweetMapper.setMessage(tweet.getMessage());
-                tweetMapper.setAuthor(userMapper);
                 tweetMappers.add(tweetMapper);
             }
         }
@@ -42,5 +41,26 @@ public class MapperObjects {
         }
 
         return userMappers;
+    }
+
+    public List<TweetMapper>  SetTweetsForUser (List<Tweet> tweets){
+        List<TweetMapper> tweetMappers = new ArrayList<TweetMapper>();
+            for (Tweet tweet : tweets) {
+
+                //Tweet
+                TweetMapper tweetMapper = new TweetMapper();
+                tweetMapper.setTweetId(tweet.getTweetId());
+                tweetMapper.setDate(tweet.getDate());
+                tweetMapper.setMessage(tweet.getMessage());
+
+                //UserMapper
+                UserMapper userMapper = new UserMapper();
+                userMapper.setId(tweet.getAuthor().getId());
+                userMapper.setName(tweet.getAuthor().getName());
+                userMapper.setTwitterNickname(tweet.getAuthor().getTwitterNickname());
+                userMapper.setTweetDate(tweet.getAuthor().getTweetDate());
+                tweetMappers.add(tweetMapper);
+            }
+        return tweetMappers;
     }
 }

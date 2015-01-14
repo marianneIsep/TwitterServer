@@ -98,7 +98,7 @@ public class DBHelper {
     * */
 
 
-    public List<Tweet> getTweetsByUser(long userId){
+    public List<TweetMapper> getTweetsByUser(long userId){
         BasicConfigurator.configure();
         List<Tweet> listTweetsByUser = null;
         try {
@@ -117,7 +117,7 @@ public class DBHelper {
                 session.close();
             }
         }
-        return listTweetsByUser;
+        return new MapperObjects().SetTweetsForUser(listTweetsByUser);
     }
 
     /*
