@@ -1,10 +1,5 @@
 package com.isep.project.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 
