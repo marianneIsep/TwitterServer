@@ -122,7 +122,7 @@ public class DBHelper {
 
     /*
     =============================================
-    ========= get users ===========
+    ================= get users =================
     =============================================
     * */
 
@@ -135,12 +135,6 @@ public class DBHelper {
             log.info(listUser.size());
         } catch(Exception e){
             log.warn(e.getMessage());
-        }
-        finally {
-            if(session != null & session.isOpen())
-            {
-                //session.close();
-            }
         }
         return new MapperObjects().mapUsers(listUser) ;
     }

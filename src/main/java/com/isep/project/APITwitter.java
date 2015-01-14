@@ -22,7 +22,9 @@ public class APITwitter {
 
     private static ConfigurationBuilder configurationBuilder;
     private static int numberOfTweets;
+    Twitter twitter;
 
+    // Build and configure the APITwitter
     public APITwitter(int numberOfTweets){
         configurationBuilder = new ConfigurationBuilder();
         configurationBuilder.setOAuthConsumerKey(CONSUMER_KEY);
@@ -31,11 +33,13 @@ public class APITwitter {
         configurationBuilder.setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
 
         this.numberOfTweets = numberOfTweets;
+
+        this.twitter = new TwitterFactory(configurationBuilder.build()).getInstance();
     }
 
-    public List<Status> getTweet(){
-        Twitter twitter = new TwitterFactory(configurationBuilder.build()).getInstance();
-        Query query = new Query("@google");
+    //
+    public List<Status> getTweet(String param){
+        Query query = new Query(param);
         List<Status> listTweetsFromTwitter = new ArrayList<Status>();
         while (listTweetsFromTwitter.size() < numberOfTweets){
             try
@@ -49,10 +53,10 @@ public class APITwitter {
                 log.error(te.getMessage());
             }
         }
-
         return listTweetsFromTwitter;
     }
 
+    //Convert Status to user
     public User getUserFromStatus(Status status){
         User user = new User();
         user.setName(status.getUser().getName());
@@ -62,6 +66,7 @@ public class APITwitter {
         return user;
     }
 
+    //Convert Status to tweet
     public Tweet getTweetFromStatus(Status status, User user){
         Tweet tweet = new Tweet();
         tweet.setMessage(status.getText());

@@ -13,7 +13,8 @@ import java.util.Set;
  */
 public class MapperObjects {
 
-    public Set<TweetMapper> mapTweets (Set<Tweet> tweets, UserMapper userMapper ) {
+    //Convert the tweets : allows to not use the entity class
+    public Set<TweetMapper> mapTweets (Set<Tweet> tweets) {
         Set<TweetMapper> tweetMappers = new HashSet<TweetMapper>();
         if (tweets.size() != 0) {
             for (Tweet tweet : tweets) {
@@ -27,6 +28,7 @@ public class MapperObjects {
         return tweetMappers;
     }
 
+    //Convert the users
     public List<UserMapper> mapUsers (List<User> users) {
         List<UserMapper> userMappers = new ArrayList<UserMapper>();
         for (User user : users)
@@ -36,13 +38,15 @@ public class MapperObjects {
             userMapper.setName(user.getName());
             userMapper.setTwitterNickname(user.getTwitterNickname());
             userMapper.setTweetDate(user.getTweetDate());
-            userMapper.setTweets(mapTweets(user.getTweets(), userMapper));
+            userMapper.setTweets(mapTweets(user.getTweets()));
             userMappers.add(userMapper);
         }
 
         return userMappers;
     }
 
+    //Convert the tweets and not get the tweets of the user
+    //Allows to not have infinity
     public List<TweetMapper>  SetTweetsForUser (List<Tweet> tweets){
         List<TweetMapper> tweetMappers = new ArrayList<TweetMapper>();
             for (Tweet tweet : tweets) {

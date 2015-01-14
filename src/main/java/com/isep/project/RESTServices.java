@@ -12,7 +12,6 @@ import twitter4j.Status;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -25,6 +24,7 @@ public class RESTServices {
 
     DBHelper dbHelper = new DBHelper();
     Logger log = Logger.getLogger(RESTServices.class);
+
     /*
     * Method that update the Database :
     * insert a user (if he doesn't exist) and add the new Tweet
@@ -37,35 +37,45 @@ public class RESTServices {
         Tweet tweet = new Tweet();
 
         APITwitter apiTwitter = new APITwitter(10);
-        List<Status> listStatus = apiTwitter.getTweet();
-        for(Status status : listStatus) {
-            user = apiTwitter.getUserFromStatus(status);
-            tweet = apiTwitter.getTweetFromStatus(status, user);
+        List<String> keyWords = new ArrayList<String>();
+        keyWords.add("@StartupVillage");
+        keyWords.add("@GlassFrance");
+        keyWords.add("@altolabs");
 
-            // check param values are not null
-            if (!user.equals(null) && !tweet.equals(null)) {
-                user = dbHelper.saveUser(user);
-                tweet = dbHelper.saveTweet(tweet);
+        for (String keyWord : keyWords) {
+            List<Status> listStatus = apiTwitter.getTweet(keyWord);
+
+            for (Status status : listStatus) {
+                user = apiTwitter.getUserFromStatus(status);
+                tweet = apiTwitter.getTweetFromStatus(status, user);
+
+                // check param values are not null
+                if (!user.equals(null) && !tweet.equals(null)) {
+                    user = dbHelper.saveUser(user);
+                    tweet = dbHelper.saveTweet(tweet);
+                }
             }
         }
 
         JSONObject jsonObject = new JSONObject();
-        if (tweet.getTweetId() != 0 && user.getId() !=0)
+        if (tweet.getTweetId() != 0 && user.getId() != 0)
             jsonObject.put("statut", "OK");
         else
             jsonObject.put("statut", "NOK");
+
         return jsonObject.toString();
     }
 
     /*
     * Method that get all users from the database
+    * with their tweets
     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/getUsers")
     public List<UserMapper> getUsers(){
         List<UserMapper> listUsers = dbHelper.getUsers();
-        log.info(listUsers.size());
+        log.info("taille de la liste d'utilisateurs : " + listUsers.size());
         return listUsers;
     }
 
@@ -78,7 +88,7 @@ public class RESTServices {
     public List<TweetMapper> getTweets(@PathParam("param") long userId) {
         BasicConfigurator.configure();
         List<TweetMapper> listTweets = dbHelper.getTweetsByUser(userId);
-        log.info("param : " + userId);
+        log.info("taille de la liste de tweets " + listTweets.size() + "pour l'utilisateur " + userId);
         return listTweets;
     }
 

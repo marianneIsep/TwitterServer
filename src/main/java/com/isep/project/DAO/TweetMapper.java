@@ -1,12 +1,6 @@
 package com.isep.project.DAO;
 
-import com.isep.project.Model.Tweet;
-import com.isep.project.Model.User;
-
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Marianne on 14/01/15.
